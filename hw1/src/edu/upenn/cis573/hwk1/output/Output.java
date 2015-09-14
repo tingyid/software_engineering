@@ -12,5 +12,5 @@ public interface Output {
 
 	public void displayFileResults(File file, DecryptionResult decryptionResult);
 	
-	public void displayAggregateResults(int correct, int incorrect);
+	public void displayAggregateResults(long correct, long incorrect);
 }

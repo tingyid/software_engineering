@@ -7,19 +7,19 @@ package edu.upenn.cis573.hwk1.utils;
  */
 public final class DecryptionResult {
 
-	private final int correct;
-	private final int incorrect;
+	private final long correct;
+	private final long incorrect;
 	
-	public DecryptionResult(int correct, int incorrect) {
+	public DecryptionResult(long correct, long incorrect) {
 		this.correct = correct;
 		this.incorrect = incorrect;
 	}
 	
-	public int getCorrect() {
+	public long getCorrect() {
 		return correct;
 	}
 	
-	public int getIncorrect() {
+	public long getIncorrect() {
 		return incorrect;
 	}
 }

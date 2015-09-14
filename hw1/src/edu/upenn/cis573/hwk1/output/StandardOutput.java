@@ -24,7 +24,7 @@ public class StandardOutput implements Output {
 	 * Print overall correct/incorrect and accuracy
 	 */
 	@Override
-	public void displayAggregateResults(int correct, int incorrect) {
+	public void displayAggregateResults(long correct, long incorrect) {
 		DecimalFormat df = new DecimalFormat("###.##");
 		System.out.println();
 		System.out.println("Total: " + correct + " correct, " + incorrect + " incorrect");

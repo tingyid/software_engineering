@@ -24,14 +24,14 @@ public final class Main {
 	 */
 	public static void main(final String[] args) {
 		try {
-		Alphabet alphabet = new EnglishAlphabet();
-		CrossValidationRunner crossValidationRunner = new CrossValidationRunner.Builder()
-			.setAlphabet(alphabet)
-			.setCorpusAccessor(new LocalDirectoryCorpusAccessor(getCorpusDirectory(args)))
-			.setEncrypter(new SubstitutionEncrypter(alphabet))
-			.setOutput(new StandardOutput())
-			.build();
-		crossValidationRunner.runCrossValidation();
+			Alphabet alphabet = new EnglishAlphabet();
+			CrossValidationRunner crossValidationRunner = new CrossValidationRunner.Builder()
+				.setAlphabet(alphabet)
+				.setCorpusAccessor(new LocalDirectoryCorpusAccessor(getCorpusDirectory(args)))
+				.setEncrypter(new SubstitutionEncrypter(alphabet))
+				.setOutput(new StandardOutput())
+				.build();
+			crossValidationRunner.runCrossValidation();
 		} catch (Exception e) {
 			System.out.println("Exception thrown: " + e);
 		}

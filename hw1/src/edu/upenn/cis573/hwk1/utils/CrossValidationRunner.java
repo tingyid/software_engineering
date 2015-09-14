@@ -37,7 +37,7 @@ public final class CrossValidationRunner {
 	 */
 	public void runCrossValidation() throws Exception {
 		
-		int correct = 0, incorrect = 0;
+		long correct = 0, incorrect = 0;
 		
 		//iterate over the files in the list
 		for (File file : corpusAccessor.getFiles()) {
@@ -77,7 +77,7 @@ public final class CrossValidationRunner {
 		int correct = 0, incorrect = 0;
 		
 		BufferedReader brOriginal = new BufferedReader(new FileReader(originalFile));
-		BufferedReader brDecrypted = new BufferedReader(new FileReader(originalFile));
+		BufferedReader brDecrypted = new BufferedReader(new FileReader(decryptedFile));
 		String lineOriginal, lineDecrypted;
 		while ((lineOriginal = brOriginal.readLine()) != null
 				&& (lineDecrypted = brDecrypted.readLine()) != null) {
