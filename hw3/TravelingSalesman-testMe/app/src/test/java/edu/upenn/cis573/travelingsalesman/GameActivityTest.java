@@ -20,7 +20,7 @@ import static org.junit.Assert.assertNotEquals;
 
 
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, emulateSdk = 18)
+@Config(constants = BuildConfig.class)
 
 public class GameActivityTest extends ActivityUnitTestCase<GameActivity> {
 
