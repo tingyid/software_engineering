@@ -5,8 +5,6 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.upenn.hangman.EvilHangMan;
-
 public class EvilHangManGuessTest {
 
 	private EvilHangMan evil;
