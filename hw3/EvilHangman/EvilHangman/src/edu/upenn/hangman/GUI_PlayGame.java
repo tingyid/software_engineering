@@ -1,3 +1,4 @@
+package edu.upenn.hangman;
 import javax.swing.*;
 
 import java.awt.*;

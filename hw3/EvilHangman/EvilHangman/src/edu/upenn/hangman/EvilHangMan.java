@@ -1,3 +1,4 @@
+package edu.upenn.hangman;
 import java.util.*;
 import java.io.*;
 

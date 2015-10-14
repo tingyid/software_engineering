@@ -14,6 +14,7 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertNotEquals;
 
@@ -69,10 +70,11 @@ public class GameActivityTest extends ActivityUnitTestCase<GameActivity> {
     public void testCreateSegment() {
 
         int expectedSegmentSize = 1;
-        String msg = "Failed to create the segment from two points on the map";
+        String msg = "Failed to create the segment from two valid points on the map";
 
         Point startPoint = view.mapPoints[0];
         Point endPoint = view.mapPoints[1];
+
         MotionEvent down = createMotionEvent(MotionEvent.ACTION_DOWN, startPoint.x, startPoint.y);
         MotionEvent up = createMotionEvent(MotionEvent.ACTION_UP, endPoint.x, endPoint.y);
 
@@ -80,6 +82,18 @@ public class GameActivityTest extends ActivityUnitTestCase<GameActivity> {
         view.dispatchTouchEvent(up);
 
         assertEquals(msg, expectedSegmentSize, view.segments.size());
+
+
+        Point startPointCentered = getCenterPoint(startPoint);
+        msg = "Segment was created, but the startPoint is not correct.";
+
+        assertEquals(msg, startPointCentered, view.segments.get(0)[0]);
+
+
+        Point endPointCentered = getCenterPoint(endPoint);
+        msg = "Segment was created, but the endPoint is not correct.";
+
+        assertEquals(msg, endPointCentered, view.segments.get(0)[1]);
     }
 
     /*
@@ -89,7 +103,7 @@ public class GameActivityTest extends ActivityUnitTestCase<GameActivity> {
     @Test
     public void testDontCreateSegmentFirstPointNotCloseToMapLocation() {
         int expectedSegmentSize = 0;
-        String msg = "Created the segment from two points on the map when shouldn't have";
+        String msg = "Shouldn't have created segment. Start point not close enough.";
 
         Point startPoint = view.mapPoints[0];
         Point endPoint = view.mapPoints[1];
@@ -109,7 +123,19 @@ public class GameActivityTest extends ActivityUnitTestCase<GameActivity> {
      */
     @Test
     public void testDontCreateSegmentLastPointNotCloseToMapLocation() {
-        // IMPLEMENT THIS TEST!
+        int expectedSegmentSize = 0;
+        String msg = "Shouldn't have created segment. End point not close enough.";
+
+        Point startPoint = view.mapPoints[0];
+        Point endPoint = view.mapPoints[1];
+
+        MotionEvent down = createMotionEvent(MotionEvent.ACTION_DOWN, startPoint.x, startPoint.y);
+        MotionEvent up = createMotionEvent(MotionEvent.ACTION_UP, endPoint.x + 30, endPoint.y + 30);
+
+        view.dispatchTouchEvent(down);
+        view.dispatchTouchEvent(up);
+
+        assertEquals(msg, expectedSegmentSize, view.segments.size());
     }
     
     /*
@@ -119,6 +145,18 @@ public class GameActivityTest extends ActivityUnitTestCase<GameActivity> {
     @Test
     public void testDontCreateSegmentFirstAndLastPointSame() {
         // IMPLEMENT THIS TEST!
+        int expectedSegmentSize = 0;
+        String msg = "Shouldn't have created segment. Start and end points are the same.";
+
+        Point startPoint = view.mapPoints[0];
+
+        MotionEvent down = createMotionEvent(MotionEvent.ACTION_DOWN, startPoint.x, startPoint.y);
+        MotionEvent up = createMotionEvent(MotionEvent.ACTION_UP, startPoint.x, startPoint.y);
+
+        view.dispatchTouchEvent(down);
+        view.dispatchTouchEvent(up);
+
+        assertEquals(msg, expectedSegmentSize, view.segments.size());
     }
 
     /*
@@ -126,9 +164,22 @@ public class GameActivityTest extends ActivityUnitTestCase<GameActivity> {
      */
     @Test
     public void testDontCreateCircuit() {
-        // it's okay to just manipulate the segments and not rely on the touch events
+        String msg = "Should have returned false. Segments don't form a single circuit";
 
-        // IMPLEMENT THIS TEST!
+        ArrayList<Point> points = new ArrayList<Point>(Arrays.asList(view.mapPoints));
+        Point firstPoint = points.remove(0); //can't create a circuit without one of the points
+
+        for(int i=0; i < points.size()-1; i++) {
+            Point[] seg = {points.get(i), points.get(i+1)};
+            view.segments.add(seg);
+        }
+
+        Point[] seg = {points.get(points.size()-1), points.get(0)};
+        view.segments.add(seg);
+        Point[] finalSeg = {points.get(0), firstPoint};
+        view.segments.add(finalSeg);
+
+        assertFalse(msg, view.detectCircuit());
     }
 
     /*
@@ -136,10 +187,24 @@ public class GameActivityTest extends ActivityUnitTestCase<GameActivity> {
      */
     @Test
     public void testCreateCircuitNotShortestPath() {
-        // it's okay to just manipulate the segments and not rely on the touch events
+        String msg = "Should still detect circuit even if not optimal solution";
 
-        // IMPLEMENT THIS TEST!
+        ArrayList<Point> points = new ArrayList<Point>(Arrays.asList(view.mapPoints));
+        Point firstPoint = points.get(0);
+        Point currentPoint = points.remove(0);
 
+        while(!points.isEmpty()) {
+            Point furthest = findFurthestPoint(currentPoint, points);
+            Point[] newSegment = {currentPoint, furthest};
+            view.segments.add(newSegment);
+            points.remove(furthest);
+            currentPoint = furthest;
+        }
+
+        Point[] finalSegment = {firstPoint, currentPoint};
+        view.segments.add(finalSegment);
+
+        assertTrue(msg, view.detectCircuit());
     }
 
     /*
@@ -147,14 +212,50 @@ public class GameActivityTest extends ActivityUnitTestCase<GameActivity> {
      */
     @Test
     public void testCreateCircuitShortestPath() {
-        // it's okay to just manipulate the segments and not rely on the touch events
+        String msg = "Should be the shortest path";
 
-        // IMPLEMENT THIS TEST!
+        ArrayList<Point> shortestPath = ShortestPath.shortestPath(view.mapPoints);
+        for (int i=0; i < shortestPath.size()-1; i++) {
+            Point[] segment = {shortestPath.get(i), shortestPath.get(i+1)};
+            view.segments.add(segment);
+        }
 
+        Point[] segment = {shortestPath.get(shortestPath.size()-1), shortestPath.get(0)};
+        view.segments.add(segment);
+
+        assertTrue(msg, view.detectCircuit());
+
+        double diff = Math.abs(view.calculatePathDistance(shortestPath)-view.myPathLength());
+
+        assertTrue(msg, diff < 0.01);
     }
 
     private MotionEvent createMotionEvent(int type, int x, int y) {
         return MotionEvent.obtain(SystemClock.uptimeMillis(),
                 SystemClock.uptimeMillis(), type, x, y, 0);
+    }
+
+    private Point getCenterPoint(Point a) {
+        return new Point(a.x+10, a.y+10);
+    }
+
+    private Point findFurthestPoint(Point startPoint, ArrayList<Point> points) {
+        Point furthestPoint = points.get(0);
+        double dist = distance(startPoint, furthestPoint);
+        for (Point p : points) {
+            double newDist = distance(startPoint, p);
+            if (newDist > dist) {
+                furthestPoint = p;
+                dist = newDist;
+            }
+        }
+
+        return furthestPoint;
+    }
+
+    private double distance(Point a, Point b) {
+        double dx = a.x - b.x;
+        double dy = a.y - b.y;
+        return Math.sqrt(dx * dx + dy * dy);
     }
 }

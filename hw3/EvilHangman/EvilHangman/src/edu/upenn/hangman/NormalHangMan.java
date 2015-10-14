@@ -1,3 +1,4 @@
+package edu.upenn.hangman;
 /**
  * <p>A class that keeps track of the current state of a game of hangman.</p>
  * <p> The class is constructed with a secret word and some number of guesses.</p>

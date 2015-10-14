@@ -1,7 +1,10 @@
+package edu.upenn.hangman;
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+
 import javax.sound.sampled.*;
 
 public class GUI_Winner implements ActionListener

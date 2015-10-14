@@ -1,3 +1,4 @@
+package edu.upenn.hangman;
 public interface HangmanGame
 {
 
