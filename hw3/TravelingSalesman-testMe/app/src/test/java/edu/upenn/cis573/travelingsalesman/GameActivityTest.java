@@ -16,9 +16,6 @@ import org.robolectric.annotation.Config;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.junit.Assert.assertNotEquals;
-
-
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class)
 
