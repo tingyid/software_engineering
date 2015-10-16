@@ -36,7 +36,8 @@ public class EvilHangManGuessTest {
 	@Test
 	public void testGuessSameCharTwice() {
 		String msg = "Should return false for guessing letter twice.";
-		evil.makeGuess('E');		
+		evil.letterGuessHistory = "E";
+		evil.guess--;
 		boolean secondGuessResult = evil.makeGuess('E');
 		assertFalse(msg, secondGuessResult);
 		

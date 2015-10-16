@@ -49,9 +49,8 @@ public class GUI_PlayGameControllerTest {
 	@Test
 	public void testGoodGuessNormal() {
 		String msg = "Should return true for a guess that must be correct";
-		setNewWordList("BARK");
-		cont.inputLetter = 'B';
-		cont.controller();
+		cont.game = new NormalHangMan("BARK", 2, "");
+		cont.isEvil = false;
 		cont.inputLetter = 'A';
 		cont.controller();
 		String expectedDisplayString = "Yes!";
@@ -67,10 +66,9 @@ public class GUI_PlayGameControllerTest {
 	@Test
 	public void testWinGame() {
 		String msg = "Game should have value true for isWin";
-		setNewWordList("BRRR");
+		cont.game = new NormalHangMan("BBBB", 2, "");
+		cont.isEvil = false;
 		cont.inputLetter = 'B';
-		cont.controller();
-		cont.inputLetter = 'R';
 		cont.controller();
 				
 		assertTrue(msg, cont.game.isWin());
@@ -81,9 +79,8 @@ public class GUI_PlayGameControllerTest {
 	@Test
 	public void testLoseGame() {
 		String msg = "Game should have value false for isWin";
-		setNewWordList("BRRR");
-		cont.inputLetter = 'A';
-		cont.controller();
+		cont.game = new NormalHangMan("BARK", 1, "");
+		cont.isEvil = false;
 		cont.inputLetter = 'C';
 		cont.controller();
 				

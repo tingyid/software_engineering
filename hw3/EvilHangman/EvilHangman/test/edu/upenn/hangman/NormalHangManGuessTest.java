@@ -32,7 +32,8 @@ public class NormalHangManGuessTest {
 	@Test
 	public void testGuessSameCharTwice() {
 		String msg = "Should return false when guessing letter both times.";
-		normal.makeGuess('I');		
+		normal.history += "I";
+		normal.guessesRemaining--;
 		boolean secondGuessResult = normal.makeGuess('I');
 		assertFalse(msg, secondGuessResult);
 		
