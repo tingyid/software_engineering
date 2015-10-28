@@ -22,6 +22,23 @@ public class FlightFinderTest {
 		ff = new FlightFinder();
 	}
 
+	/*
+	 * List of cases to cover:
+	 * 1. Bad home parameter (don't care about case sensitivity)
+	 * 2. Bad dest parameter (don't care about case sensitivity)
+	 * 3. Direct = false and timeLimit < 0
+	 * 4. Correct home/dest, direct=true, flight exists
+	 * 5. Correct home/dest, direct=true, flight doesn't exist
+	 * 6. Correct home/dest, direct=false, timeLimit >= 0, all flights less than timeLimit
+	 * 
+	 * Paramter possibilities:
+	 * Home: valid or invalid
+	 * Dest: valid or invalid
+	 * Direct: true or false
+	 * timeLimit: <0 or >= 0
+	 */
+	
+	
 	@Test
 	public void testNumFlightsDirect() {
 		
