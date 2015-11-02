@@ -2,7 +2,6 @@ package edu.upenn.cis573.flights;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
@@ -40,8 +39,7 @@ public class FlightFinderTest {
 	
 	
 	@Test
-	public void testNumFlightsDirect() {
-		
+	public void testNumFlightsDirectFlightExists() {
 		// test a direct flight that should exist
 		// based on what's in Flight.allFlights
 		
@@ -62,9 +60,150 @@ public class FlightFinderTest {
 		// check that there are no indirect flights reported
 		List<Flight[]> indirect = ff.getIndirectFlights();
 		assertEquals("Size of indirectFlights incorrect when finding direct flights", 0, indirect.size());
+	}
+	
+	@Test
+	public void testNumFlightsDirectFlightDoesNotExist() {
+		// test a direct flight that should not exist
+		// based on what's in Flight.allFlights
 		
+		// note that, if "direct" is true, then "timeLimit" should not be used
+		int actual = ff.numFlights("PHL", "SEA", true, -100);
 		
-
+		int expected = 0;
+		assertEquals("Return value from numFlights incorrect when finding direct flights", expected, actual);
+		
+		// don't forget to check the side effects!!
+		List<Flight> direct = ff.getDirectFlights();
+		assertEquals("Size of directFlights incorrect when finding direct flights", 0, direct.size()); // check number of elements in list
+			
+		// check that there are no indirect flights reported
+		List<Flight[]> indirect = ff.getIndirectFlights();
+		assertEquals("Size of indirectFlights incorrect when finding direct flights", 0, indirect.size());
+	}
+	
+	@Test
+	public void testNumFlightsIndirectFlightExistsAndUnderTimeLimit() {
+		// test a direct flight that should not exist
+		// based on what's in Flight.allFlights
+		
+		// note that, if "direct" is true, then "timeLimit" should not be used
+		int actual = ff.numFlights("PHL", "SEA", false, 600);
+		
+		int expected = 1;
+		assertEquals("Return value from numFlights incorrect when finding direct flights", expected, actual);
+		
+		// don't forget to check the side effects!!
+		List<Flight> direct = ff.getDirectFlights();
+		assertEquals("Size of directFlights incorrect when finding direct flights", 0, direct.size()); // check number of elements in list
+			
+		// check that there are no indirect flights reported
+		List<Flight[]> indirect = ff.getIndirectFlights();
+		assertEquals("Size of indirectFlights incorrect when finding direct flights", 1, indirect.size());
+		
+		Flight[] flights = indirect.get(0);
+		assertEquals("Starting airport incorrect in first element when finding direct flights", "PHL", flights[0].getStart());
+		assertEquals("Ending airport incorrect in first element when finding direct flights", "SEA", flights[1].getEnd());
+	}
+	
+	@Test
+	public void testNumFlightsIndirectFlightExistsNotUnderTimeLimit() {
+		// test a direct flight that should not exist
+		// based on what's in Flight.allFlights
+		
+		// note that, if "direct" is true, then "timeLimit" should not be used
+		int actual = ff.numFlights("PHL", "SEA", false, 500);
+		
+		int expected = 0;
+		assertEquals("Return value from numFlights incorrect when finding direct flights", expected, actual);
+		
+		// don't forget to check the side effects!!
+		List<Flight> direct = ff.getDirectFlights();
+		assertEquals("Size of directFlights incorrect when finding direct flights", 0, direct.size()); // check number of elements in list
+			
+		// check that there are no indirect flights reported
+		List<Flight[]> indirect = ff.getIndirectFlights();
+		assertEquals("Size of indirectFlights incorrect when finding direct flights", 0, indirect.size());
+	}
+	
+	@Test
+	public void testNumFlightsIndirectFlightDoesNotExist() {
+		// test a direct flight that should not exist
+		// based on what's in Flight.allFlights
+		
+		// note that, if "direct" is true, then "timeLimit" should not be used
+		int actual = ff.numFlights("BOS", "SEA", false, 1000);
+		
+		int expected = 0;
+		assertEquals("Return value from numFlights incorrect when finding direct flights", expected, actual);
+		
+		// don't forget to check the side effects!!
+		List<Flight> direct = ff.getDirectFlights();
+		assertEquals("Size of directFlights incorrect when finding direct flights", 0, direct.size()); // check number of elements in list
+			
+		// check that there are no indirect flights reported
+		List<Flight[]> indirect = ff.getIndirectFlights();
+		assertEquals("Size of indirectFlights incorrect when finding direct flights", 0, indirect.size());
+	}
+	
+	@Test
+	public void testNumFlightsInvalidHome() {
+		// test a direct flight that should not exist
+		// based on what's in Flight.allFlights
+		
+		// note that, if "direct" is true, then "timeLimit" should not be used
+		int actual = ff.numFlights("B", "SEA", false, 1000);
+		
+		int expected = -1;
+		assertEquals("Return value from numFlights incorrect when finding direct flights", expected, actual);
+		
+		// don't forget to check the side effects!!
+		List<Flight> direct = ff.getDirectFlights();
+		assertEquals("Size of directFlights incorrect when finding direct flights", 0, direct.size()); // check number of elements in list
+			
+		// check that there are no indirect flights reported
+		List<Flight[]> indirect = ff.getIndirectFlights();
+		assertEquals("Size of indirectFlights incorrect when finding direct flights", 0, indirect.size());
+	}
+	
+	@Test
+	public void testNumFlightsInvalidDest() {
+		// test a direct flight that should not exist
+		// based on what's in Flight.allFlights
+		
+		// note that, if "direct" is true, then "timeLimit" should not be used
+		int actual = ff.numFlights("BOS", "S", false, 1000);
+		
+		int expected = -1;
+		assertEquals("Return value from numFlights incorrect when finding direct flights", expected, actual);
+		
+		// don't forget to check the side effects!!
+		List<Flight> direct = ff.getDirectFlights();
+		assertEquals("Size of directFlights incorrect when finding direct flights", 0, direct.size()); // check number of elements in list
+			
+		// check that there are no indirect flights reported
+		List<Flight[]> indirect = ff.getIndirectFlights();
+		assertEquals("Size of indirectFlights incorrect when finding direct flights", 0, indirect.size());
+	}
+	
+	@Test
+	public void testNumFlightsDirectIsFaleAndInvalidTimeLimit() {
+		// test a direct flight that should not exist
+		// based on what's in Flight.allFlights
+		
+		// note that, if "direct" is true, then "timeLimit" should not be used
+		int actual = ff.numFlights("PHL", "SEA", false, -1);
+		
+		int expected = -1;
+		assertEquals("Return value from numFlights incorrect when finding direct flights", expected, actual);
+		
+		// don't forget to check the side effects!!
+		List<Flight> direct = ff.getDirectFlights();
+		assertEquals("Size of directFlights incorrect when finding direct flights", 0, direct.size()); // check number of elements in list
+			
+		// check that there are no indirect flights reported
+		List<Flight[]> indirect = ff.getIndirectFlights();
+		assertEquals("Size of indirectFlights incorrect when finding direct flights", 0, indirect.size());
 	}
 
 }
