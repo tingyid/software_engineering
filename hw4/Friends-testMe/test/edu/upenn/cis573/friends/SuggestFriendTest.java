@@ -4,15 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * Test suite for FriendFinder.suggestFriend
+ * method. Tests each scenario listed by the
+ * specification, utilizing dependency
+ * injection to avoid connecting to the database 
+ */
 public class SuggestFriendTest {
 	
-	@Before
-	public void setUp() throws Exception {
-	}
-
 	@Test
 	public void testPersonHasNoFriends() {
 		
@@ -43,6 +44,10 @@ public class SuggestFriendTest {
 						if (arg.equals("Platypus")) {
 							friendList.add("Aardvark");
 							friendList.add("Hippo");
+						} else if (arg.equals("Aardvark")) {
+							friendList.add("Platypus");
+						} else if (arg.equals("Hippo")) {
+							friendList.add("Platypus");
 						}
 						return friendList;
 					}
@@ -50,7 +55,7 @@ public class SuggestFriendTest {
 			}
 		};
 		
-		String msg = "Should return null for person whose friends have no friends";
+		String msg = "Should return null for person whose friends have no friends other than them";
 		String expected = null;
 		String actual = friendFinder.suggestFriend("Platypus");
 		Assert.assertEquals(msg, expected, actual);
@@ -142,7 +147,7 @@ public class SuggestFriendTest {
 	}
 	
 	@Test
-	public void testPersonHasTwoFriendsAndTheyHaveTwoOtherFriendsOneMutual() {
+	public void testPersonHasTwoFriendsAndTheyHaveOneOtherFriendEachAndMutual() {
 		
 		FriendFinder friendFinder = new FriendFinder() {
 			protected DataSource createFriendsDataSource() {

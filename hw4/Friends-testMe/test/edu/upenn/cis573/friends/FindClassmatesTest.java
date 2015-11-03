@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * Test suite for FriendFinder.findClassmates
+ * method. Tests each scenario listed by the
+ * specification, utilizing dependency
+ * injection to avoid connecting to the database 
+ */
 public class FindClassmatesTest {
-
-	@Before
-	public void setUp() throws Exception {
-	}
 
 	@Test
 	public void testPersonTakingNoClasses() {
@@ -33,7 +34,7 @@ public class FindClassmatesTest {
 	}
 	
 	@Test
-	public void testPersonTakingOneClassAndNoStudentsInThem() {
+	public void testPersonTakingOneClassAndNoOtherStudentsInThem() {
 		
 		FriendFinder friendFinder = new FriendFinder() {
 			protected DataSource createClassesDataSource() {
@@ -48,7 +49,9 @@ public class FindClassmatesTest {
 			protected DataSource createStudentsDataSource() {
 				return new StudentsDataSource() {
 					public List<String> get(String arg) {
-						return new ArrayList<String>();
+						List<String> students = new ArrayList<String>();
+						students.add("Platypus");
+						return students;
 					}
 				};
 			}
@@ -86,6 +89,10 @@ public class FindClassmatesTest {
 						if (arg.equals("CIS573")) {
 							students.add("Platypus");
 							students.add("Aardvark");
+						} else if (arg.equals("CIS550")) {
+							students.add("Platypus");
+						} else if (arg.equals("CIS555")) {
+							students.add("Aardvark");
 						}
 						return students;
 					}
@@ -100,7 +107,7 @@ public class FindClassmatesTest {
 	}
 	
 	@Test
-	public void testPersonTakingTwoClassesAndOneStudentTakingSameAndAnotherTakingPartialSubset() {
+	public void testPersonTakingTwoClassesAndOneStudentTakingSameSetAndAnotherTakingPartialSubset() {
 		
 		FriendFinder friendFinder = new FriendFinder() {
 			protected DataSource createClassesDataSource() {
@@ -128,6 +135,7 @@ public class FindClassmatesTest {
 						if (arg.equals("CIS573")) {
 							students.add("Platypus");
 							students.add("Aardvark");
+							students.add("Ocelot");
 						} else if (arg.equals("CIS550")) {
 							students.add("Platypus");
 							students.add("Aardvark");
@@ -149,7 +157,7 @@ public class FindClassmatesTest {
 	}
 	
 	@Test
-	public void testPersonTakingTwoClassesAndTwoStudentsTakingSameAndAnotherTakingPartialSubset() {
+	public void testPersonTakingTwoClassesAndTwoStudentsTakingSameSetAndAnotherTakingPartialSubset() {
 		
 		FriendFinder friendFinder = new FriendFinder() {
 			protected DataSource createClassesDataSource() {
@@ -181,6 +189,7 @@ public class FindClassmatesTest {
 							students.add("Platypus");
 							students.add("Aardvark");
 							students.add("Hippo");
+							students.add("Ocelot");
 						} else if (arg.equals("CIS550")) {
 							students.add("Platypus");
 							students.add("Aardvark");
@@ -237,6 +246,7 @@ public class FindClassmatesTest {
 							students.add("Platypus");
 							students.add("Aardvark");
 							students.add("Hippo");
+							students.add("Ocelot");
 						} else if (arg.equals("CIS550")) {
 							students.add("Platypus");
 							students.add("Aardvark");
@@ -262,7 +272,7 @@ public class FindClassmatesTest {
 	}
 	
 	@Test
-	public void testPersonTakingTwoClassesAndTwoStudentsTakingSameAndTwoStudentsTakingSupersetAndAnotherTakingPartialSubset() {
+	public void testPersonTakingTwoClassesAndTwoStudentsTakingSameSetAndTwoStudentsTakingSupersetAndAnotherTakingPartialSubset() {
 		
 		FriendFinder friendFinder = new FriendFinder() {
 			protected DataSource createClassesDataSource() {
@@ -304,6 +314,7 @@ public class FindClassmatesTest {
 							students.add("Hippo");
 							students.add("Jaguar");
 							students.add("Gorilla");
+							students.add("Ocelot");
 						} else if (arg.equals("CIS550")) {
 							students.add("Platypus");
 							students.add("Aardvark");
