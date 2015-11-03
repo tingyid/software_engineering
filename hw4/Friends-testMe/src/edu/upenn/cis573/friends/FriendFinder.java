@@ -62,10 +62,6 @@ public class FriendFinder {
 				
 	}
 	
-	protected DataSource createFriendsDataSource() {
-		return new FriendsDataSource();
-	}
-	
 	/*
 	 * This method takes a String representing the name of a student 
 	 * and then returns a list containing the names of everyone else 
@@ -83,14 +79,14 @@ public class FriendFinder {
 		
 		if (name == null || name.length() == 0) return null;
 		
-		DataSource cds = new ClassesDataSource();
+		DataSource cds = createClassesDataSource();
 
 		// find the classes that this student is taking
 		List<String> myClasses = cds.get(name);
 		if (myClasses == null) return null;
 		
 		// use the classes to find the names of the students
-		DataSource sds = new StudentsDataSource();
+		DataSource sds = createStudentsDataSource();
 		
 		List<String> classmates = new ArrayList<String>();
 		
@@ -122,4 +118,15 @@ public class FriendFinder {
 		else return classmates;
 	}
 	
+	protected DataSource createFriendsDataSource() {
+		return new FriendsDataSource();
+	}
+	
+	protected DataSource createClassesDataSource() {
+		return new ClassesDataSource();
+	}
+	
+	protected DataSource createStudentsDataSource() {
+		return new StudentsDataSource();
+	}
 }
