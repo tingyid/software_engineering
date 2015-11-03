@@ -26,7 +26,7 @@ public class FriendFinder {
 		// some basic sanity checking
 		if (me == null || me.length() == 0) return null;
 		
-		DataSource ds = new FriendsDataSource();
+		DataSource ds = createFriendsDataSource();
 		
 		List<String> myFriends = ds.get(me);
 		if (myFriends == null) return null;
@@ -60,6 +60,10 @@ public class FriendFinder {
 		
 		return suggestedFriend;
 				
+	}
+	
+	protected DataSource createFriendsDataSource() {
+		return new FriendsDataSource();
 	}
 	
 	/*
