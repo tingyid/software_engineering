@@ -342,6 +342,4 @@ public class FindClassmatesTest {
 		Assert.assertTrue(msg, actual.contains("Gorilla"));
 		Assert.assertTrue(msg, actual.contains("Jaguar"));
 	}
-	
-
 }
