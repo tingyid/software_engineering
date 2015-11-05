@@ -207,5 +207,21 @@ public class FlightFinderTest {
 		List<Flight[]> indirect = ff.getIndirectFlights();
 		assertEquals("Size of indirectFlights incorrect when finding direct flights", 0, indirect.size());
 	}
+	
+	@Test
+	public void testNumFlightsHomeAndDestSame() {
+		// test no results when home=dest
+		
+		int actual = ff.numFlights("BOS", "BOS", false, 1000);
+		
+		int expected = -1;
+		assertEquals("Return value from numFlights incorrect when finding direct flights", expected, actual);
+		
+		List<Flight> direct = ff.getDirectFlights();
+		assertEquals("Size of directFlights incorrect when finding direct flights", 0, direct.size());
+			
+		List<Flight[]> indirect = ff.getIndirectFlights();
+		assertEquals("Size of indirectFlights incorrect when finding direct flights", 0, indirect.size());
+	}
 
 }
