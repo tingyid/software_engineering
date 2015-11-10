@@ -9,7 +9,23 @@ public abstract class SubsetSumSolver {
 	 */
     protected boolean accept(boolean[] solution, int A[], int target) {
     	
-    	// IMPLEMENT THIS METHOD HERE!
+    	//if null, we consider it to be correct
+    	if (null == solution) {
+    		return true;
+    	}
+    	
+    	//calculate the total over "true" elements in array
+    	//so can compare with target
+    	int sum = 0;
+    	for(int i=0; i < solution.length; i++) {
+    		if (solution[i]) {
+    			sum += A[i];
+    		}
+    	}
+    	
+    	if (sum == target) {
+    		return true;
+    	}
     	
     	return false;
     }
