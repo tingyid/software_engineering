@@ -9,10 +9,26 @@ public class SubsetSumRecoveryBlock extends SubsetSumSolver {
 	 */	
 	public boolean[] solve(int[] A, int target) throws ValidSolutionNotFoundException {
 
-		// IMPLEMENT THIS METHOD!
+		//save state
+		int[] copy = new int[A.length];
+		System.arraycopy(A, 0, copy, 0, A.length);
+		
+		boolean[] result = SubsetSumImplementations.solveDP(A, target);
+		if (accept(result, A, target)) {
+			return result;
+		} else {
+			//restore state
+			System.arraycopy(copy, 0, A, 0, copy.length);
+			
+			result = SubsetSumImplementations.solveBF(A, target);
+			if (accept(result, A, target)) {
+				return result;
+			} else {
+				//restore state
+				System.arraycopy(copy, 0, A, 0, copy.length);
+			}
+		}
 				
 		throw new ValidSolutionNotFoundException();
-
 	}
-
 }
