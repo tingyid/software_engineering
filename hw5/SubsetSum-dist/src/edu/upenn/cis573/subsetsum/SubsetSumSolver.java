@@ -23,6 +23,7 @@ public abstract class SubsetSumSolver {
     		}
     	}
     	
+    	//check if we have the correct sum
     	if (sum == target) {
     		return true;
     	}

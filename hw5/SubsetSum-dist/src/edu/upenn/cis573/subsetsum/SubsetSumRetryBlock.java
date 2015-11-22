@@ -17,7 +17,7 @@ public class SubsetSumRetryBlock extends SubsetSumSolver {
 		
 		//try to solve original. if fails,
 		//try two more times with shuffling
-		for(int i=0; i < 2; i++) {
+		for(int i=0; i < 3; i++) {
 			if (i > 0) {
 				shuffle(A);			
 			}
