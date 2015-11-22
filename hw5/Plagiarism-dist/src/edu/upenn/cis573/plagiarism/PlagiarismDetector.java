@@ -26,7 +26,6 @@ public class PlagiarismDetector {
 		dirName = name;
 	}
 	
-	
 	/*
 	 * This method reads the given file and then converts it into a List of Strings.
 	 * It does not include punctuation and converts all words in the file to uppercase.
@@ -40,8 +39,9 @@ public class PlagiarismDetector {
 		try {
 			Scanner in = new Scanner(new File(filename));
 			while (in.hasNext()) {
-				words.add(in.next().replaceAll("[^a-zA-Z]", "").toUpperCase());
+				words.add(in.next().replaceAll("[^a-zA-Z]", "").toUpperCase()); //MINOR: could do toUpperCase first and then not match on a-z
 			}
+			in.close();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -50,35 +50,35 @@ public class PlagiarismDetector {
 		
 		return words;
 	}
-
-
 	
 	/*
-	 * This method reads a file and converts it into a Set/List of distinct phrases,
+	 * This method reads a file and converts it into a Set of distinct phrases,
 	 * each of size "window". The Strings in each phrase are whitespace-separated.
 	 */
 	private Set<String> createPhrases(String filename, int window) {
 		if (filename == null || window < 1) return null;
 		
-		List<String> words = readFile(filename);
+		StringBuilder filePath = new StringBuilder();
+		filePath.append(dirName);
+		filePath.append("/");
+		filePath.append(filename);
+		
+		List<String> words = readFile(filePath.toString());
 		
 		Set<String> phrases = new HashSet<String>();
 		
 		for (int i = 0; i < words.size() - window + 1; i++) {
-			String phrase = "";
+			StringBuilder phrase = new StringBuilder();
 			for (int j = 0; j < window; j++) {
-				phrase += words.get(i+j) + " ";
+				phrase.append(words.get(i+j));
+				phrase.append(" ");
 			}
 
-			if (phrases.contains(phrase) == false)
-				phrases.add(phrase);
-
+			phrases.add(phrase.toString());
 		}
 		
 		return phrases;
 	}
-
-	
 
 	/*
 	 * Returns a Map (sorted by the value of the Integer, in non-descending order) indicating
@@ -92,31 +92,49 @@ public class PlagiarismDetector {
 		
 		Map<String, Integer> numberOfMatches = new HashMap<String, Integer>();
 		
-		for (int i = 0; i < files.length; i++) {
+		//used to store phrases for a particular file so don't need to recompute
+		Map<String, Set<String>> filePhrases = new HashMap<String, Set<String>>();
+		
+		for (int i = 0; i < files.length-1; i++) {
 			String file1 = files[i];
 
-			for (int j = 0; j < files.length; j++) { 
+			for (int j = i+1; j < files.length; j++) { 
 				String file2 = files[j];
 
-				Set<String> file1Phrases = createPhrases(dirName + "/" + file1, windowSize); 
-				Set<String> file2Phrases = createPhrases(dirName + "/" + file2, windowSize); 
+				Set<String> file1Phrases; 
+				Set<String> file2Phrases; 
 				
-				if (file1Phrases == null || file2Phrases == null)
+				if (filePhrases.containsKey(file1)) {
+					file1Phrases = filePhrases.get(file1);
+				} else {
+					file1Phrases = createPhrases(file1, windowSize);
+					filePhrases.put(file1, file1Phrases);
+				}
+				
+				if (file1Phrases == null) {
+					return null;
+				}
+				
+				if (filePhrases.containsKey(file2)) {
+					file2Phrases = filePhrases.get(file2);
+				} else {
+					file2Phrases = createPhrases(file2, windowSize);
+					filePhrases.put(file2, file2Phrases);
+				}
+				
+				if (file2Phrases == null)
 					return null;
 				
 				Set<String> matches = findMatches(file1Phrases, file2Phrases);
-				
-				if (matches == null)
-					return null;
 								
 				if (matches.size() > threshold) {
-					String key = file1 + "-" + file2;
-					if (numberOfMatches.containsKey(file2 + "-" + file1) == false && file1.equals(file2) == false) {
-						numberOfMatches.put(key,matches.size());
-					}
-				}				
+					StringBuilder key = new StringBuilder();
+					key.append(file1);
+					key.append("-");
+					key.append(file2);
+					numberOfMatches.put(key.toString(),matches.size());
+				}
 			}
-			
 		}		
 		
 		return sortResults(numberOfMatches);
@@ -130,16 +148,12 @@ public class PlagiarismDetector {
 	
 		Set<String> matches = new HashSet<String>();
 		
-		if (myPhrases != null && yourPhrases != null) {
-		
-			for (String mine : myPhrases) {
-				for (String yours : yourPhrases) {
-					if (mine.equalsIgnoreCase(yours)) {
-						matches.add(mine);
-					}
-				}
+		for (String mine : myPhrases) {
+			if (yourPhrases.contains(mine)) {
+				matches.add(mine);
 			}
 		}
+		
 		return matches;
 	}
 	
@@ -170,10 +184,7 @@ public class PlagiarismDetector {
 			}
 			
 			list.put(maxKey, maxValue);
-			
-			if (copy.containsKey(maxKey)) {
-				copy.put(maxKey, -1);
-			}
+			copy.put(maxKey, -1);
 		}
 		
 		return list;
