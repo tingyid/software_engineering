@@ -39,7 +39,7 @@ public class PlagiarismDetector {
 		try {
 			Scanner in = new Scanner(new File(filename));
 			while (in.hasNext()) {
-				words.add(in.next().replaceAll("[^a-zA-Z]", "").toUpperCase()); //MINOR: could do toUpperCase first and then not match on a-z
+				words.add(in.next().replaceAll("[^a-zA-Z]", "").toUpperCase());
 			}
 			in.close();
 		}
